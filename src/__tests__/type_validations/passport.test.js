@@ -490,16 +490,30 @@ describe("validatePassport(SL)", () => {
 
 describe("validatePassport(US)", () => {
   it("should return false for an invalid passport", () => {
-    expect(validatePassport("1234567", "US")).toBe(false);
-    expect(validatePassport("A123456", "US")).toBe(false);
-    expect(validatePassport("SE123456", "US")).toBe(false);
-    expect(validatePassport("123-456.789", "US")).toBe(false);
-    expect(validatePassport("L12345678", "US")).toBe(false);
-    expect(validatePassport("PA234567", "US")).toBe(false);
+    expect(validatePassport("1234567", "US")).toBe(false); // Too short (7 digits)
+    expect(validatePassport("123-456.789", "US")).toBe(false); // Contains invalid characters
+    expect(validatePassport("ABCD123456", "US")).toBe(false); // Too many letters (4)
+    expect(validatePassport("A12345", "US")).toBe(false); // Too few digits (5)
+    expect(validatePassport("AB123456789", "US")).toBe(false); // Too many digits (9) with letters
+    expect(validatePassport("1A2345678", "US")).toBe(false); // Letters in wrong position
+    expect(validatePassport("", "US")).toBe(false); // Empty string
+    expect(validatePassport("12345678", "US")).toBe(false); // Too short (8 digits)
   });
 
   it("should return true for a valid passport", () => {
+    // Traditional 9-digit format
     expect(validatePassport("123456789", "US")).toBe(true);
     expect(validatePassport("987654321", "US")).toBe(true);
+    
+    // Modern alphanumeric formats (uppercase)
+    expect(validatePassport("A12345678", "US")).toBe(true); // 1 letter + 8 digits
+    expect(validatePassport("AB1234567", "US")).toBe(true); // 2 letters + 7 digits
+    expect(validatePassport("ABC123456", "US")).toBe(true); // 3 letters + 6 digits
+    expect(validatePassport("Z87654321", "US")).toBe(true); // 1 letter + 8 digits
+    expect(validatePassport("XY9876543", "US")).toBe(true); // 2 letters + 7 digits
+    
+    // Lowercase letters (converted to uppercase by util)
+    expect(validatePassport("a12345678", "US")).toBe(true); // Will be converted to A12345678
+    expect(validatePassport("abc123456", "US")).toBe(true); // Will be converted to ABC123456
   });
 });
