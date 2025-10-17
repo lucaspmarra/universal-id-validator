@@ -2,6 +2,231 @@
 
 A validator for different types of personal, entity and VAT IDs for multiple countries.
 
+## 🚀 Quick Start Guide
+
+### Installation
+
+Install the package using npm or yarn:
+
+```bash
+npm install id-doc-validator
+# or
+yarn add id-doc-validator
+```
+
+### Basic Usage
+
+```javascript
+const {
+  isValidIdDoc,
+  isValidVat,
+  isValidViesVat,
+  supportedCountriesIdDoc,
+  supportedCountriesVat,
+  supportedIdDocsByCountry
+} = require('id-doc-validator');
+```
+
+## 📖 Usage Examples
+
+### Validating Personal ID Documents
+
+#### Example 1: Validate a Spanish NIF
+```javascript
+const { isValidIdDoc } = require('id-doc-validator');
+
+// Validate a Spanish NIF (Número de Identificación Fiscal)
+const isValid = isValidIdDoc('12345678Z', 'ES', 'nif');
+console.log(isValid); // true or false
+```
+
+#### Example 2: Validate a German Passport
+```javascript
+const { isValidIdDoc } = require('id-doc-validator');
+
+// Validate a German passport
+const isValid = isValidIdDoc('C01X00T47', 'DE', 'passport');
+console.log(isValid); // true or false
+```
+
+#### Example 3: Auto-detect document type
+```javascript
+const { isValidIdDoc } = require('id-doc-validator');
+
+// Let the validator check all supported document types for Portugal
+const isValid = isValidIdDoc('12345678', 'PT');
+// Will try: CC, NIF, and Passport formats
+console.log(isValid); // true if valid for any supported type
+```
+
+### Validating VAT Numbers
+
+#### Example 4: Validate a VAT number (includes country code)
+```javascript
+const { isValidVat } = require('id-doc-validator');
+
+// Validate a Spanish VAT number
+const isValid = isValidVat('ESB12345678');
+console.log(isValid); // true or false
+
+// Validate a German VAT number
+const isValidDE = isValidVat('DE123456789');
+console.log(isValidDE); // true or false
+```
+
+#### Example 5: Validate VAT using VIES API (EU only)
+```javascript
+const { isValidViesVat } = require('id-doc-validator');
+
+// Validate using the European Commission's VIES system
+async function checkVat() {
+  const result = await isValidViesVat('12345678', 'ES');
+  console.log(result);
+  // Returns:
+  // {
+  //   isValid: true/false,
+  //   userError: 'VALID' | 'INVALID' | error code,
+  //   vatNumber: '12345678'
+  // }
+}
+
+checkVat();
+```
+
+### Getting Supported Countries and Document Types
+
+#### Example 6: List all supported countries for ID documents
+```javascript
+const { supportedCountriesIdDoc } = require('id-doc-validator');
+
+const countries = supportedCountriesIdDoc();
+console.log(countries); // ['AT', 'BE', 'BG', 'BR', 'CA', 'CY', ...]
+```
+
+#### Example 7: List all supported document types for a specific country
+```javascript
+const { supportedIdDocsByCountry } = require('id-doc-validator');
+
+const ptDocTypes = supportedIdDocsByCountry('PT');
+console.log(ptDocTypes); // ['cc', 'nif', 'passport']
+
+const esDocTypes = supportedIdDocsByCountry('ES');
+console.log(esDocTypes); // ['nif', 'nie', 'passport']
+```
+
+#### Example 8: List all countries that support VAT validation
+```javascript
+const { supportedCountriesVat } = require('id-doc-validator');
+
+const vatCountries = supportedCountriesVat();
+console.log(vatCountries); // ['AT', 'BE', 'BG', 'BR', 'CO', 'CY', ...]
+```
+
+## 💡 Common Use Cases
+
+### Form Validation
+```javascript
+const { isValidIdDoc } = require('id-doc-validator');
+
+function validateUserIdDocument(idNumber, country, docType) {
+  if (!idNumber || !country) {
+    return { valid: false, message: 'ID number and country are required' };
+  }
+
+  const isValid = isValidIdDoc(idNumber, country, docType);
+  
+  return {
+    valid: isValid,
+    message: isValid ? 'Valid document' : 'Invalid document number'
+  };
+}
+
+// Usage in a form
+const result = validateUserIdDocument('12345678Z', 'ES', 'nif');
+console.log(result); // { valid: true, message: 'Valid document' }
+```
+
+### Business Registration Validation
+```javascript
+const { isValidVat, isValidViesVat } = require('id-doc-validator');
+
+async function validateBusinessVat(vatNumber, country) {
+  // First, do a format validation (offline, fast)
+  const formatValid = isValidVat(vatNumber);
+  
+  if (!formatValid) {
+    return { valid: false, message: 'Invalid VAT format' };
+  }
+
+  // For EU countries, verify with VIES API (online, slower)
+  if (['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 
+       'FR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 
+       'PL', 'PT', 'RO', 'SE', 'SK', 'SL'].includes(country)) {
+    try {
+      const viesResult = await isValidViesVat(
+        vatNumber.substring(2), // Remove country code
+        country
+      );
+      
+      return {
+        valid: viesResult.isValid,
+        message: viesResult.isValid ? 'VAT verified' : 'VAT not found in VIES',
+        viesData: viesResult
+      };
+    } catch (error) {
+      // Fallback to format validation if VIES is unavailable
+      return { valid: formatValid, message: 'Format valid, VIES unavailable' };
+    }
+  }
+
+  return { valid: true, message: 'Format valid' };
+}
+```
+
+### Dynamic Country Selection
+```javascript
+const { supportedCountriesIdDoc, supportedIdDocsByCountry } = require('id-doc-validator');
+
+// Get all countries for dropdown
+const countries = supportedCountriesIdDoc();
+
+// When user selects a country, show available document types
+function getDocumentTypesForCountry(country) {
+  const docTypes = supportedIdDocsByCountry(country);
+  
+  // Map to friendly names
+  const friendlyNames = {
+    'passport': 'Passport',
+    'nif': 'NIF (Tax ID)',
+    'nie': 'NIE (Foreigner ID)',
+    'cc': 'CC (Citizen Card)',
+    'gic': 'Identity Card',
+    'cf': 'Codice Fiscale',
+    'cni': 'Carte Nationale d\'Identité'
+  };
+
+  return docTypes.map(type => ({
+    value: type,
+    label: friendlyNames[type] || type.toUpperCase()
+  }));
+}
+
+console.log(getDocumentTypesForCountry('ES'));
+// [
+//   { value: 'nif', label: 'NIF (Tax ID)' },
+//   { value: 'nie', label: 'NIE (Foreigner ID)' },
+//   { value: 'passport', label: 'Passport' }
+// ]
+```
+
+## ⚠️ Important Notes
+
+- **Country Codes**: Use ISO 3166-1 alpha-2 country codes (e.g., "ES", "FR", "DE")
+- **Document Type**: Document type parameter is case-insensitive (e.g., "nif", "NIF", "Nif" all work)
+- **VAT Country Codes**: Most VAT numbers use the same country code, except Greece (use "EL" instead of "GR") and Slovenia (use "SI" instead of "SL")
+- **VIES API**: The European Commission's VIES API has rate limits and may be unavailable at times. Use it sparingly and implement fallback logic.
+- **Validation Type**: This library validates the format and checksum of documents, not their actual existence or validity in official databases (except when using `isValidViesVat`)
+
 ## Supported Countries
 
 <details>
