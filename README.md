@@ -1,4 +1,4 @@
-# id-doc-validator
+# identity-doc-validator
 
 A validator for different types of personal, entity and VAT IDs for multiple countries.
 
@@ -499,12 +499,12 @@ console.log(getDocumentTypesForCountry('ES'));
 
 ## Installation
 
-To use the `id-doc-validator` library in your project, you can install it via npm or yarn:
+To use the `identity-doc-validator` library in your project, you can install it via npm or yarn:
 
 ```bash
-npm install id-doc-validator
+npm install identity-doc-validator
 # OR
-yarn add id-doc-validator
+yarn add identity-doc-validator
 ```
 
 ## How to Use
