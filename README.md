@@ -1,4 +1,4 @@
-# identity-doc-validator
+# universal-id-validator
 
 A validator for different types of personal, entity and VAT IDs for multiple countries.
 
@@ -9,9 +9,9 @@ A validator for different types of personal, entity and VAT IDs for multiple cou
 Install the package using npm or yarn:
 
 ```bash
-npm install identity-doc-validator
+npm install universal-id-validator
 # OR
-yarn add identity-doc-validator
+yarn add universal-id-validator
 ```
 
 ### Basic Usage
@@ -24,7 +24,7 @@ const {
   supportedCountriesIdDoc,
   supportedCountriesVat,
   supportedIdDocsByCountry
-} = require('id-doc-validator');
+} = require('universal-id-validator');
 ```
 
 ## 📖 Usage Examples
@@ -33,7 +33,7 @@ const {
 
 #### Example 1: Validate a Spanish NIF
 ```javascript
-const { isValidIdDoc } = require('id-doc-validator');
+const { isValidIdDoc } = require('universal-id-validator');
 
 // Validate a Spanish NIF (Número de Identificación Fiscal)
 const isValid = isValidIdDoc('12345678Z', 'ES', 'nif');
@@ -42,7 +42,7 @@ console.log(isValid); // true or false
 
 #### Example 2: Validate a German Passport
 ```javascript
-const { isValidIdDoc } = require('id-doc-validator');
+const { isValidIdDoc } = require('universal-id-validator');
 
 // Validate a German passport
 const isValid = isValidIdDoc('C01X00T47', 'DE', 'passport');
@@ -51,7 +51,7 @@ console.log(isValid); // true or false
 
 #### Example 3: Auto-detect document type
 ```javascript
-const { isValidIdDoc } = require('id-doc-validator');
+const { isValidIdDoc } = require('universal-id-validator');
 
 // Let the validator check all supported document types for Portugal
 const isValid = isValidIdDoc('12345678', 'PT');
@@ -63,7 +63,7 @@ console.log(isValid); // true if valid for any supported type
 
 #### Example 4: Validate a VAT number (includes country code)
 ```javascript
-const { isValidVat } = require('id-doc-validator');
+const { isValidVat } = require('universal-id-validator');
 
 // Validate a Spanish VAT number
 const isValid = isValidVat('ESB12345678');
@@ -76,7 +76,7 @@ console.log(isValidDE); // true or false
 
 #### Example 5: Validate VAT using VIES API (EU only)
 ```javascript
-const { isValidViesVat } = require('id-doc-validator');
+const { isValidViesVat } = require('universal-id-validator');
 
 // Validate using the European Commission's VIES system
 async function checkVat() {
@@ -97,7 +97,7 @@ checkVat();
 
 #### Example 6: List all supported countries for ID documents
 ```javascript
-const { supportedCountriesIdDoc } = require('id-doc-validator');
+const { supportedCountriesIdDoc } = require('universal-id-validator');
 
 const countries = supportedCountriesIdDoc();
 console.log(countries); // ['AT', 'BE', 'BG', 'BR', 'CA', 'CY', ...]
@@ -105,7 +105,7 @@ console.log(countries); // ['AT', 'BE', 'BG', 'BR', 'CA', 'CY', ...]
 
 #### Example 7: List all supported document types for a specific country
 ```javascript
-const { supportedIdDocsByCountry } = require('id-doc-validator');
+const { supportedIdDocsByCountry } = require('universal-id-validator');
 
 const ptDocTypes = supportedIdDocsByCountry('PT');
 console.log(ptDocTypes); // ['cc', 'nif', 'passport']
@@ -116,7 +116,7 @@ console.log(esDocTypes); // ['nif', 'nie', 'passport']
 
 #### Example 8: List all countries that support VAT validation
 ```javascript
-const { supportedCountriesVat } = require('id-doc-validator');
+const { supportedCountriesVat } = require('universal-id-validator');
 
 const vatCountries = supportedCountriesVat();
 console.log(vatCountries); // ['AT', 'BE', 'BG', 'BR', 'CO', 'CY', ...]
@@ -126,7 +126,7 @@ console.log(vatCountries); // ['AT', 'BE', 'BG', 'BR', 'CO', 'CY', ...]
 
 ### Form Validation
 ```javascript
-const { isValidIdDoc } = require('id-doc-validator');
+const { isValidIdDoc } = require('universal-id-validator');
 
 function validateUserIdDocument(idNumber, country, docType) {
   if (!idNumber || !country) {
@@ -148,7 +148,7 @@ console.log(result); // { valid: true, message: 'Valid document' }
 
 ### Business Registration Validation
 ```javascript
-const { isValidVat, isValidViesVat } = require('id-doc-validator');
+const { isValidVat, isValidViesVat } = require('universal-id-validator');
 
 async function validateBusinessVat(vatNumber, country) {
   // First, do a format validation (offline, fast)
@@ -185,7 +185,7 @@ async function validateBusinessVat(vatNumber, country) {
 
 ### Dynamic Country Selection
 ```javascript
-const { supportedCountriesIdDoc, supportedIdDocsByCountry } = require('id-doc-validator');
+const { supportedCountriesIdDoc, supportedIdDocsByCountry } = require('universal-id-validator');
 
 // Get all countries for dropdown
 const countries = supportedCountriesIdDoc();
