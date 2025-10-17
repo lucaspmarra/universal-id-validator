@@ -9,9 +9,9 @@ A validator for different types of personal, entity and VAT IDs for multiple cou
 Install the package using npm or yarn:
 
 ```bash
-npm install id-doc-validator
-# or
-yarn add id-doc-validator
+npm install identity-doc-validator
+# OR
+yarn add identity-doc-validator
 ```
 
 ### Basic Usage
@@ -497,17 +497,9 @@ console.log(getDocumentTypesForCountry('ES'));
 
 </details>
 
-## Installation
 
-To use the `identity-doc-validator` library in your project, you can install it via npm or yarn:
 
-```bash
-npm install identity-doc-validator
-# OR
-yarn add identity-doc-validator
-```
-
-## How to Use
+## Details
 
 ### `isValidIdDoc`
 
