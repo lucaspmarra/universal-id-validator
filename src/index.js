@@ -60,7 +60,7 @@ const isValidIdDoc = (idDoc, country, idDocType = "") => {
     return false;
   }
 
-  if (idDocType !== "" && !supportedIdDocTypes[country]?.[idDocType]) {
+  if (idDocType !== "" && !(supportedIdDocTypes[country] && supportedIdDocTypes[country][idDocType])) {
     return false;
   }
 
