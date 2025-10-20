@@ -5,7 +5,7 @@
   "description": "A validator for different types of personal ID for multiple countries.",
   "main": "src/index.js",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "validate",
