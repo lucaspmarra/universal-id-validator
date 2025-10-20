@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "test": "npx jest",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "publish": "npm version patch && npm publish"
   },
   "author": "Oscar González (https://github.com/ogonzi)",
   "contributors": [],
