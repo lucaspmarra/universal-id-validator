@@ -1,5 +1,7 @@
 # universal-id-validator
 
+This package is a fork of [id-doc-validator](https://github.com/necesito-un-trastero/id-doc-validator), removing the optional chain to provide greater compatibility.
+
 A validator for different types of personal, entity and VAT IDs for multiple countries.
 
 ## 🚀 Quick Start Guide
