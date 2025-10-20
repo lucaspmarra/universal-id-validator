@@ -1,5 +1,5 @@
 {
-  "name": "@lucaspmarra/universal-id-validator",
+  "name": "universal-id-validator",
   "version": "1.0.0",
   "homepage": "https://github.com/lucaspmarra/universal-id-validator",
   "description": "A validator for different types of personal ID for multiple countries.",
